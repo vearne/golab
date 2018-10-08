@@ -59,15 +59,20 @@ func main() {
 		res  := buffer.Bytes()
 		fmt.Println("resp byte length", len(res))
 
-		fmt.Println("len", buffer.Len())
-		fmt.Println("Cap", buffer.Cap())
+		//fmt.Println("len", buffer.Len())
+		//fmt.Println("Cap", buffer.Cap())
 		buffPool.Put(byteSlice)
 
 		if i%1000 == 0 {
 			runtime.ReadMemStats(&mem)
 			fmt.Println("---------------", i)
 			fmt.Println("mem.Alloc", mem.Alloc)
+			// 为堆对象总计分配的字节数
 			fmt.Println("mem.TotalAlloc", mem.TotalAlloc)
+			// 为创建堆对象总计的内存申请次数
+			fmt.Println("mem.Mallocs", mem.Mallocs)
+			// 为销毁堆对象总计的内存释放次数
+			fmt.Println("mem.Frees", mem.Frees)
 			// 堆对象占用的字节大小
 			fmt.Println("mem.HeapAlloc", mem.HeapAlloc)
 			fmt.Println("mem.HeapSys", mem.HeapSys)
