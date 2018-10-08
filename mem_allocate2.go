@@ -37,7 +37,7 @@ func main() {
 	var resp *req.Resp
 	var buffer *bytes.Buffer
 	var byteSlice []byte
-	url := "http://up.xiaorui.cc:9000/bigjson.json"
+	url := "http://localhost:9000/bigjson.json"
 	var mem runtime.MemStats
 	for i := 0; i < size+1; i++ {
 		resp, err = req.Get(url)
