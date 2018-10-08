@@ -27,7 +27,7 @@ func init(){
 }
 
 func main(){
-	size := 0
+	size := 10000
 
 	var err error
 	var resp *req.Resp
@@ -41,7 +41,7 @@ func main(){
 		}
 		data,  _ := resp.ToBytes()
 		fmt.Println("resp byte length", len(data))
-		if i % 10000 == 0{
+		if i % 1000 == 0{
 			runtime.ReadMemStats(&mem)
 			fmt.Println("---------------", i)
 			fmt.Println("mem.Alloc", mem.Alloc)
