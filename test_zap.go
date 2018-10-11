@@ -5,7 +5,7 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"time"
-	"golab/myencoder"
+	"github.com/vearne/golab/myencoder"
 )
 
 

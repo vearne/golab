@@ -7,7 +7,7 @@ import (
 	"unicode/utf8"
 	"sync"
 	"math"
-	"golab/bufferpool"
+	"github.com/vearne/golab/bufferpool"
 )
 
 // For JSON-escaping; see jsonEncoder.safeAddString below.
