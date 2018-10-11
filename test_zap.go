@@ -14,14 +14,13 @@ func MyEncoding(config zapcore.EncoderConfig) (zapcore.Encoder, error) {
 }
 
 
-
-
 func main() {
 	// 注册一个Encoder
 	zap.RegisterEncoder("console2", MyEncoding)
 
 	// 默认是Info级别
 	logcfg := zap.NewProductionConfig()
+	// 启用自定义的Encoding
 	logcfg.Encoding = "console2"
 
 	logger, err := logcfg.Build()
