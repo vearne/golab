@@ -36,6 +36,7 @@ func putConsole2Encoder(enc *Console2Encoder) {
 }
 
 // **注意** 需要实现zapcore.Encoder 所定义的接口
+// **注意** 需要实现zapcore.PrimitiveArrayEncoder 所定义的接口
 type Console2Encoder struct {
 	*zapcore.EncoderConfig
 	buf    *buffer.Buffer
