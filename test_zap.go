@@ -31,7 +31,7 @@ func main() {
 	defer logger.Sync()
 	for i := 0; i < 3; i++ {
 		time.Sleep(1 * time.Second)
-		logger.Info("Info log", zap.String("name", "buick2008"),
+		logger.Info("some message", zap.String("name", "buick2008"),
 			zap.Int("age", 15))
 	}
 }
