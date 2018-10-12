@@ -24,7 +24,29 @@ func SetConnPool() {
 	req.SetTimeout(5 * time.Second)
 }
 
+//---------------------------------------
 var buffPool sync.Pool
+
+func GetBuff() *bytes.Buffer{
+	var buffer *bytes.Buffer
+	item := buffPool.Get()
+	if item == nil {
+		var byteSlice []byte
+		byteSlice = make([]byte, 0, 10*1024)
+		buffer = bytes.NewBuffer(byteSlice)
+
+	} else {
+		buffer = item.(*bytes.Buffer)
+	}
+	return buffer
+}
+
+func PutBuff(buffer *bytes.Buffer){
+	buffer.Reset()
+	buffPool.Put(buffer)
+}
+
+//---------------------------------------
 
 func init() {
 	SetConnPool()
@@ -36,7 +58,8 @@ func main() {
 	var err error
 	var resp *req.Resp
 	var buffer *bytes.Buffer
-	var byteSlice []byte
+
+
 	url := "http://localhost:9000/bigjson.json"
 	var mem runtime.MemStats
 	for i := 0; i < size+1; i++ {
@@ -46,13 +69,7 @@ func main() {
 			continue
 		}
 
-		item := buffPool.Get()
-		if item == nil {
-			byteSlice = make([]byte, 0, 10*1024)
-		} else {
-			byteSlice = item.([]byte)
-		}
-		buffer = bytes.NewBuffer(byteSlice)
+		buffer = GetBuff()
 		buffer.ReadFrom(resp.Response().Body)
 
 
@@ -61,7 +78,7 @@ func main() {
 
 		//fmt.Println("len", buffer.Len())
 		//fmt.Println("Cap", buffer.Cap())
-		buffPool.Put(byteSlice)
+		PutBuff(buffer)
 
 		if i%1000 == 0 {
 			runtime.ReadMemStats(&mem)
