@@ -8,11 +8,9 @@ import (
 	"bytes"
 	"net/http"
 	"time"
-	"io"
 )
 
 func SetConnPool() {
-	io.Copy()
 	client := &http.Client{}
 	client.Transport = &http.Transport{
 		MaxIdleConnsPerHost: 1000,
