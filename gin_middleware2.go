@@ -27,6 +27,7 @@ type bodyLogWriter struct {
 
 func (w bodyLogWriter) Write(b []byte) (int, error) {
 	if n, err := w.body.Write(b); err != nil {
+		log.Println("err", err)
 		return n, err
 	}
 	return w.ResponseWriter.Write(b)
@@ -45,10 +46,12 @@ func Logger2() gin.HandlerFunc {
 
 		var code string
 		var res ErrorCode
+
+		log.Println(string(blw.body.Bytes()))
 		if err := json.Unmarshal(blw.body.Bytes(), &res); err != nil {
-			code = res.Code
-		} else {
 			code = SUCCESS_CODE
+		} else {
+			code = res.Code
 		}
 		log.Println("code", code)
 	}
