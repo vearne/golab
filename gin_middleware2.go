@@ -10,6 +10,7 @@ import (
 
 
 const SUCCESS_CODE = "E000"
+const INTERNAL_CODE = "E001"
 
 type ErrorResp struct {
 	Code string `json:"code"`
@@ -49,10 +50,19 @@ func Logger2() gin.HandlerFunc {
 
 		log.Println(string(blw.body.Bytes()))
 		if err := json.Unmarshal(blw.body.Bytes(), &res); err != nil {
+			// Body体不是合法的JSON或"code"字段类型不一致
+			code = INTERNAL_CODE
+			log.Println("error", err)
+		} else if len(res.Code) <= 0 {
+			// Body体是合法JSON
+			// JSON不含有"code"字段
 			code = SUCCESS_CODE
-		} else {
+		}else{
+			// Body体是合法JSON
+			// JSON含有"code"字段
 			code = res.Code
 		}
+
 		log.Println("code", code)
 	}
 }
@@ -64,7 +74,12 @@ func main() {
 
 	r.GET("/test", func(c *gin.Context) {
 		log.Println("-----gin_middleware2------")
-		c.JSON(http.StatusOK, ErrorResp{Code:"E001", Msg:"params error"})
+		//data := `{"msg":"test"}`
+		//data := `xxx`
+		//data := `{"code":"E002", "msg":"test"}`
+		data := `{"code": 10, "msg":"test"}`
+		c.Data(http.StatusOK,
+			"application/json", []byte(data))
 	})
 
 	// Listen and serve on 0.0.0.0:8080
