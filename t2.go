@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"bytes"
-	"github.com/xtaci/kcp-go"
+	//"github.com/xtaci/kcp-go"
 
 )
 
@@ -34,6 +34,9 @@ func main() {
 	fmt.Println("len", len(t), "cap", cap(t))
 	fmt.Println("len", len(x), "cap", cap(x))
 
-	lis, err := kcp.ListenWithOptions(":10000", nil, 10, 3)
+	//lis, err := kcp.ListenWithOptions(":10000", nil, 10, 3)
+	slice := []string{"1","2","3"}
+	fmt.Println(slice[1:2])
+	fmt.Println(slice[3:3])
 
 }
