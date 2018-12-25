@@ -5,10 +5,26 @@ import (
 	"fmt"
 	"github.com/imroc/req"
 	"math/rand"
+	"net/http"
 	"time"
 )
 
+func SetConnPool() {
+	client := &http.Client{}
+	client.Transport = &http.Transport{
+		MaxIdleConnsPerHost: 500,
+		// 无需设置MaxIdleConns
+		// MaxIdleConns controls the maximum number of idle (keep-alive)
+		// connections across all hosts. Zero means no limit.
+		// MaxIdleConns 默认是0，0表示不限制
+	}
+
+	req.SetClient(client)
+	req.SetTimeout(5 * time.Second)
+}
+
 func main() {
+	SetConnPool()
 	host := "127.0.0.1"
 	flag.StringVar(&host, "host", "127.0.0.1", "127.0.0.1")
 
@@ -28,11 +44,13 @@ func main() {
 		case <-c:
 			count = rand.Intn(20)
 			for i := 0; i < count; i++ {
-				r.Get(url1)
+				resp, _ := r.Get(url1)
+				resp.Bytes()
 			}
 
 			for i := 0; i < count*2; i++ {
-				r.Get(url2)
+				resp, _ := r.Get(url2)
+				resp.Bytes()
 			}
 		}
 	}
