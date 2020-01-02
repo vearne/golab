@@ -1,7 +1,7 @@
 package zaplog
 
 import (
-	//"fmt"
+	"fmt"
 	"testing"
 )
 
