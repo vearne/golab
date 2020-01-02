@@ -50,40 +50,35 @@ func (fa *FileWriteAsyncer) Sync() error {
 func batchWriteLog(fa *FileWriteAsyncer) {
 	buffer := bytes.NewBuffer(make([]byte, 0, 10240))
 
-	ticker := time.NewTicker(time.Millisecond * 500)
+	ticker := time.NewTicker(time.Millisecond * 200)
 	//var record []byte
-	var counter int = 0
 	var err error
 	for {
 		select {
 		case <-ticker.C:
-			if counter > 0 {
+			if len(buffer.Bytes()) > 0 {
 				_, err = fa.innerLogger.Write(buffer.Bytes())
 				if err != nil {
 					panic(err)
 				}
-				counter = 0
 				buffer.Reset()
 			}
 
 		case record := <-fa.ch:
-			counter++
 			buffer.Write(record)
-			if counter >= 200 {
+			if len(buffer.Bytes()) >= 1024*4 {
 				_, err = fa.innerLogger.Write(buffer.Bytes())
 				if err != nil {
 					panic(err)
 				}
-				counter = 0
 				buffer.Reset()
 			}
 		case <-fa.syncChan:
-			if counter > 0 {
+			if len(buffer.Bytes()) > 0 {
 				_, err = fa.innerLogger.Write(buffer.Bytes())
 				if err != nil {
 					panic(err)
 				}
-				counter = 0
 				buffer.Reset()
 			}
 			break
