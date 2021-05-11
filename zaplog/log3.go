@@ -42,6 +42,18 @@ func (fa *FileWriteAsyncer) Write(data []byte) (int, error) {
 	return len(data), nil
 }
 
+/*
+func (fa *FileWriteAsyncer) Write(data []byte) (int, error) {
+	select {
+	case fa.ch <- data:
+		// pass
+	default:
+		// 在metric中记录丢弃的日志数量
+	}
+	return len(data), nil
+}
+*/
+
 func (fa *FileWriteAsyncer) Sync() error {
 	fa.syncChan <- struct{}{}
 	return nil
