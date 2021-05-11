@@ -3,6 +3,7 @@ package zaplog
 import (
 	"bytes"
 	"github.com/natefinch/lumberjack"
+	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"time"
@@ -37,22 +38,20 @@ func NewFileWriteAsyncer(filepath string) *FileWriteAsyncer {
 
 }
 
-func (fa *FileWriteAsyncer) Write(data []byte) (int, error) {
-	fa.ch <- data
-	return len(data), nil
-}
+//func (fa *FileWriteAsyncer) Write(data []byte) (int, error) {
+//	fa.ch <- data
+//	return len(data), nil
+//}
 
-/*
 func (fa *FileWriteAsyncer) Write(data []byte) (int, error) {
 	select {
 	case fa.ch <- data:
-		// pass
+		return len(data), nil
 	default:
-		// 在metric中记录丢弃的日志数量
+		// 注意: 需要在metric中记录丢弃的日志数量
+		return 0, errors.New("Log channel is full")
 	}
-	return len(data), nil
 }
-*/
 
 func (fa *FileWriteAsyncer) Sync() error {
 	fa.syncChan <- struct{}{}
